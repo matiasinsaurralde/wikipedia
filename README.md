@@ -31,5 +31,9 @@ English actor Christian Bale portrays Connor in the film series' fourth installm
 
 ## TODO
 
-* Integrate it with [Opensearch API] (http://www.mediawiki.org/wiki/API%3aOpensearch).
-* Switch to Nokogiri? ([Hpricot] (https://github.com/whymirror/hpricot) was used as a tribute to [whytheluckystiff] (http://en.wikipedia.org/wiki/Why_the_lucky_stiff))
+* Integrate it with the [Opensearch API] (http://www.mediawiki.org/wiki/API%3aOpensearch).
+* Switch to Nokogiri or provide support for both Nokogiri and Hpricot?
+
+## Disclaimer
+
+[Hpricot] (https://github.com/whymirror/hpricot) was used as a tribute to [whytheluckystiff] (http://en.wikipedia.org/wiki/Why_the_lucky_stiff).
