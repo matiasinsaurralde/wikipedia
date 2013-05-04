@@ -1,0 +1,12 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    hpricot (0.8.6)
+    htmlentities (4.3.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  hpricot
+  htmlentities
