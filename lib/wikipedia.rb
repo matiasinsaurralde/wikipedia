@@ -4,8 +4,23 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'open-uri'
+require 'cgi'
+
 require 'htmlentities'
 require 'hpricot'
+
+class String
+	def capitalize_every_word()
+		new_string = []
+		self.split(' ').each do |word|
+			new_string << word.capitalize
+		end
+		return new_string.join(' ')
+	end
+	def capitalize_every_word!()
+		self.replace( self.capitalize_every_word() )
+	end
+end
 
 module Wikipedia
 
@@ -15,8 +30,9 @@ module Wikipedia
 
 		texts = []
 
-		raw_data = open( URL.gsub("%LANG%", lang.to_s)+n ).read()
-		#raw_data = File.read('pareidolia').gsub("\n", "")
+		puts URL.gsub("%LANG%", lang.to_s)+escape(n)
+
+		raw_data = open( URL.gsub("%LANG%", lang.to_s)+escape(n) ).read()
 
 		he = HTMLEntities.new()
 
@@ -29,6 +45,14 @@ module Wikipedia
 		end
 
 		return texts
+
+	end
+
+	def self.escape(s)
+
+		s.capitalize_every_word!
+
+		CGI.escape( s )
 
 	end
 end
