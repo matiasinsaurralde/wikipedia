@@ -10,36 +10,57 @@ require 'htmlentities'
 require 'hpricot'
 
 class String
+
 	def capitalize_every_word()
+
 		new_string = []
+
 		self.split(' ').each do |word|
+
 			new_string << word.capitalize
+
 		end
-		return new_string.join(' ')
+
+		new_string.join(' ')
+
 	end
 	def capitalize_every_word!()
+
 		self.replace( self.capitalize_every_word() )
+
 	end
 end
 
 module Wikipedia
 
 	class Article
+
 		attr_reader :name, :texts, :raw_html
+
 		def initialize( name, raw_html )
+
 			@name, @raw_html, @texts = name, raw_html, []
+
 			Hpricot(raw_html).search('p').each do |ph|
+
 				@texts << Wikipedia::escape_text( ph.inner_text )
+
 			end
+
 		end
 
 		def ambiguous?
-			@raw_html.include?('(disambiguation')
+
+			@raw_html.include?('(disambiguation)')
+
 		end
 
 		def inspect()
+
 			"#<Article '#{@name}'>"
+
 		end
+
 	end
 
 	URL = "http://%LANG%.wikipedia.org/w/api.php?action=parse&page="
@@ -47,10 +68,13 @@ module Wikipedia
 	def self.article( n, options = {} )
 
 		if !options[:lang]
+
 			options.merge!( :lang => :en )
+
 		end
 
 		# raw_data = open( URL.gsub("%LANG%", options[:lang].to_s)+escape(n) ).read()
+
 		raw_data = open( 'apple.html' ).read()
 
 		return Article.new( n, format( raw_data ) )
@@ -62,7 +86,9 @@ module Wikipedia
 	def self.format(s)
 
 		he = HTMLEntities.new()
+
 		# characters = { Regexp.new("\\[(.*)\\]") => '' }
+
 		s = he.decode( he.decode( s ) ).gsub("\n", "").gsub("\t", "") # >:D
 
 		s
