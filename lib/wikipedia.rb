@@ -26,7 +26,7 @@ module Wikipedia
 
 	URL = "http://%LANG%.wikipedia.org/w/api.php?action=parse&page="
 
-	def self.article( n, lang = :es )
+	def self.article( n, lang = :en )
 
 		texts = []
 
