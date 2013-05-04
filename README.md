@@ -2,4 +2,7 @@
 
 tool for extracting plain text from wikipedia articles
 
-## usage:
+## installing:
+
+````$ gem install wikipedia
+````
