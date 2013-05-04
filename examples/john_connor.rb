@@ -5,4 +5,6 @@ require './lib/wikipedia'
 
 require 'pp'
 
-connor = Wikipedia::article 'John Connor', :es
+connor = Wikipedia::article 'John Connor'
+
+pp connor.first	# just the first paragraph
