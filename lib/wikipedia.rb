@@ -30,8 +30,6 @@ module Wikipedia
 
 		texts = []
 
-		puts URL.gsub("%LANG%", lang.to_s)+escape(n)
-
 		raw_data = open( URL.gsub("%LANG%", lang.to_s)+escape(n) ).read()
 
 		he = HTMLEntities.new()
@@ -41,7 +39,7 @@ module Wikipedia
  		raw_data = he.decode( he.decode( raw_data ) ).gsub("\n", "") # >:D
 
 		Hpricot(raw_data).search('p').each do |ph|
-			texts << ph.inner_text
+			texts << escape_text( ph.inner_text )
 		end
 
 		return texts
@@ -53,6 +51,16 @@ module Wikipedia
 		s.capitalize_every_word!
 
 		CGI.escape( s )
+
+	end
+
+	def self.escape_text(s)
+
+		# Hpricot's inner_text() does this already but we don't want the cite-notes stuff: [0], [1], etc.
+
+		{ Regexp.new("\\[(.*)\\]") => '' }.each { |str, replace_with| s.gsub!( str, replace_with ) }
+
+		s
 
 	end
 end
