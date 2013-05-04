@@ -11,11 +11,11 @@ module Wikipedia
 
 	URL = "http://%LANG%.wikipedia.org/w/api.php?action=parse&page="
 
-	def self.article( n, lang = 'es' )
+	def self.article( n, lang = :es )
 
 		texts = []
 
-		raw_data = open( URL.gsub("%LANG%", lang)+n ).read()
+		raw_data = open( URL.gsub("%LANG%", lang.to_s)+n ).read()
 		#raw_data = File.read('pareidolia').gsub("\n", "")
 
 		he = HTMLEntities.new()

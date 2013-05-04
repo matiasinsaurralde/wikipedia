@@ -5,4 +5,4 @@ require './lib/wikipedia'
 
 require 'pp'
 
-pp Wikipedia::article 'Pareidolia', 'es'
+pp Wikipedia::article 'Pareidolia', :es
