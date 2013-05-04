@@ -24,26 +24,48 @@ end
 
 module Wikipedia
 
-	URL = "http://%LANG%.wikipedia.org/w/api.php?action=parse&page="
-
-	def self.article( n, lang = :en )
-
-		texts = []
-
-		raw_data = open( URL.gsub("%LANG%", lang.to_s)+escape(n) ).read()
-
-		he = HTMLEntities.new()
-
-		# characters = { Regexp.new("\\[(.*)\\]") => '' }
-
- 		raw_data = he.decode( he.decode( raw_data ) ).gsub("\n", "") # >:D
-
-		Hpricot(raw_data).search('p').each do |ph|
-			texts << escape_text( ph.inner_text )
+	class Article
+		attr_reader :name, :texts, :raw_html
+		def initialize( name, raw_html )
+			@name, @raw_html, @texts = name, raw_html, []
+			Hpricot(raw_html).search('p').each do |ph|
+				@texts << Wikipedia::escape_text( ph.inner_text )
+			end
 		end
 
-		return texts
+		def ambiguous?
+			@raw_html.include?('(disambiguation')
+		end
 
+		def inspect()
+			"#<Article '#{@name}'>"
+		end
+	end
+
+	URL = "http://%LANG%.wikipedia.org/w/api.php?action=parse&page="
+
+	def self.article( n, options = {} )
+
+		if !options[:lang]
+			options.merge!( :lang => :en )
+		end
+
+		# raw_data = open( URL.gsub("%LANG%", options[:lang].to_s)+escape(n) ).read()
+		raw_data = open( 'apple.html' ).read()
+
+		return Article.new( n, format( raw_data ) )
+
+	end
+
+	# helpers:
+
+	def self.format(s)
+
+		he = HTMLEntities.new()
+		# characters = { Regexp.new("\\[(.*)\\]") => '' }
+		s = he.decode( he.decode( s ) ).gsub("\n", "").gsub("\t", "") # >:D
+
+		s
 	end
 
 	def self.escape(s)
@@ -64,3 +86,5 @@ module Wikipedia
 
 	end
 end
+
+require_relative 'opensearch'
