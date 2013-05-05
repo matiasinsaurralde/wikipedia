@@ -17,10 +17,8 @@ it's easy:
 ````ruby
 irb(main):001:0* require 'wikipedia'
 irb(main):002:0>
-irb(main):003:0* require 'pp'
-irb(main):004:0>
-irb(main):008:0* connor = Wikipedia::article 'John Connor'
-irb(main):009:0* pp connor.first     # just the first paragraph
+irb(main):003:0* connor = Wikipedia::article 'John Connor'
+irb(main):004:0* connor.first     # just the first paragraph
 "John Connor is a fictional character and the main protagonist of the Terminator franchise.
 Created by writer and director James Cameron, the character is first referred to in the 1984 film The Terminator 
 and first appears, portrayed by teenage actor Edward Furlong, in its 1991 sequel Terminator 2: Judgment Day.
