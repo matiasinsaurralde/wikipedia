@@ -3,10 +3,14 @@
 
 require 'wikipedia'
 
-apple = Wikipedia::article 'apple'
-
-p apple.ambiguous?
-
 os = Wikipedia::article 'operating system'
 
 p os.ambiguous?
+
+apple = Wikipedia::article 'apple'
+
+if apple.ambiguous?
+
+	p apple.disambiguate("Steve jobs from apple said something")
+
+end
