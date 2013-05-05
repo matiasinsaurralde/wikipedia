@@ -2,17 +2,15 @@
 
 module Wikipedia
 
-	class Text
-	end
-
 	def self.disambiguate( given_text, ambiguous_article )
 
-		reference, section_articles = {}, {}
+		reference, section_articles, other_articles = {}, {}, {}
 
 		# extract toc and term information, load each article.
 
 		puts "given text: #{given_text}"
 		puts "ambiguous article: #{ambiguous_article.inspect}"
+		puts
 
 		ambiguous_article.sections.to_a[0, ambiguous_article.sections.size-1].each do |section|
 			reference.store( section.first, section.last[ :anchor ] )
@@ -36,8 +34,7 @@ module Wikipedia
 					href = a.attributes['href']
 
 					if !href.include?('index.php') and !href.include?('(disambiguation)')	# we don't want the disambiguation of the disambiguation!
-						section_articles[ the_section ].store( a.inner_text, { :link => href, :phrase => li.inner_text  } )
-						#puts href
+						section_articles[ the_section ].store( a.inner_text, { :link => href.split('/').last, :phrase => li.inner_text  } )
 					end
 				end
 
@@ -45,7 +42,16 @@ module Wikipedia
 			end
 		end
 
-		pp section_articles
+		# get articles
+		section_articles.each do |section, articles|
+			puts "*** #{section}"
+			articles.each do |article_name, data|
+				puts "#{article_name}: \"#{data[:phrase]}\""
+				Wikipedia::article(article_name.dup)
+				puts
+			end
+			puts
+		end
 
 	end
 
