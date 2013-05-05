@@ -29,7 +29,8 @@ and by 19-year-old Thomas Dekker in the 2007 television series Terminator: The S
 English actor Christian Bale portrays Connor in the film series' fourth installment, Terminator Salvation."
 ````
 
-There's a simple method for checking term's ambiguity, a method for checking those other terms will be provided in the future.
+There's a simple method for checking term's ambiguity, an array of those other terms will be provided in the future.
+
 A good example is 'apple' which may refer to the company, to the fruit, etc.
 
 ````ruby
