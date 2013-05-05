@@ -3,6 +3,4 @@
 
 require 'wikipedia'
 
-require 'pp'
-
-pp Wikipedia::article 'Pareidolia', :es
+p Wikipedia::article 'Pareidolia', :es

@@ -3,8 +3,8 @@
 
 require 'wikipedia'
 
-require 'pp'
-
 connor = Wikipedia::article 'John Connor'
 
-pp connor.first	# just the first paragraph
+p connor
+
+p connor.texts.first	# just the first paragraph

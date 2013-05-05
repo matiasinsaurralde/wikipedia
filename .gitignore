@@ -1,2 +1,4 @@
 *.gemspec
 *.gem
+*.xml
+*.html

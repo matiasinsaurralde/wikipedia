@@ -3,56 +3,31 @@
 require 'rubygems'
 require 'bundler/setup'
 
+require 'rexml/document'
 require 'open-uri'
 require 'cgi'
 
 require 'htmlentities'
 require 'hpricot'
 
-class String
-
-	def capitalize_every_word()
-
-		new_string = []
-
-		self.split(' ').each do |word|
-
-			new_string << word.capitalize
-
-		end
-
-		new_string.join(' ')
-
-	end
-	def capitalize_every_word!()
-
-		self.replace( self.capitalize_every_word() )
-
-	end
-end
-
 module Wikipedia
 
 	class Article
 
-		attr_reader :name, :texts, :raw_html
+		attr_reader :name, :data
 
-		def initialize( name, raw_html )
+		def initialize( name, data )
 
-			@name, @raw_html, @texts = name, raw_html, []
-
-			Hpricot(raw_html).search('p').each do |ph|
-
-				@texts << Wikipedia::escape_text( ph.inner_text )
-
-			end
+			@name, @data = name, data
 
 		end
 
+		def self.from_api_response(data)
+			self.new( data[:name], data )
+		end
+
 		def ambiguous?
-
-			@raw_html.include?('(disambiguation)')
-
+			@data[ :raw_html ].include?('(disambiguation)')
 		end
 
 		def inspect()
@@ -61,56 +36,25 @@ module Wikipedia
 
 		end
 
-	end
-
-	URL = "http://%LANG%.wikipedia.org/w/api.php?action=parse&page="
-
-	def self.article( n, options = {} )
-
-		if !options[:lang]
-
-			options.merge!( :lang => :en )
-
+		def method_missing(m, *args, &block)
+			@data[ m ]
 		end
 
-		# raw_data = open( URL.gsub("%LANG%", options[:lang].to_s)+escape(n) ).read()
+	end
 
-		raw_data = open( 'apple.html' ).read()
+	def self.article( options  )
 
-		return Article.new( n, format( raw_data ) )
+		if options.class == String
+			options = { :page => options, :action => :parse }
+		end
+
+		article = Wikipedia::API.parse options
+
+		return Article.from_api_response( article )
 
 	end
 
-	# helpers:
-
-	def self.format(s)
-
-		he = HTMLEntities.new()
-
-		# characters = { Regexp.new("\\[(.*)\\]") => '' }
-
-		s = he.decode( he.decode( s ) ).gsub("\n", "").gsub("\t", "") # >:D
-
-		s
-	end
-
-	def self.escape(s)
-
-		s.capitalize_every_word!
-
-		CGI.escape( s )
-
-	end
-
-	def self.escape_text(s)
-
-		# Hpricot's inner_text() does this already but we don't want the cite-notes stuff: [0], [1], etc.
-
-		{ Regexp.new("\\[(.*)\\]") => '' }.each { |str, replace_with| s.gsub!( str, replace_with ) }
-
-		s
-
-	end
 end
 
+require_relative 'api'
 require_relative 'opensearch'

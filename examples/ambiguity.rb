@@ -3,8 +3,10 @@
 
 require 'wikipedia'
 
-require 'pp'
-
 apple = Wikipedia::article 'apple'
 
 p apple.ambiguous?
+
+os = Wikipedia::article 'operating system'
+
+p os.ambiguous?
