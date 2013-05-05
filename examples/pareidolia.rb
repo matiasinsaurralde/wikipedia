@@ -3,4 +3,7 @@
 
 require 'wikipedia'
 
-p Wikipedia::article 'Pareidolia', :es
+# changing default language
+Wikipedia::API::language = :es
+
+Wikipedia::article 'Pareidolia'
