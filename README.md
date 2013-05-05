@@ -29,6 +29,17 @@ and by 19-year-old Thomas Dekker in the 2007 television series Terminator: The S
 English actor Christian Bale portrays Connor in the film series' fourth installment, Terminator Salvation."
 ````
 
+There's a simple method for checking term's ambiguity, a method for checking those other terms will be provided in the future.
+A good example is 'apple' which may refer to the company, to the fruit, etc.
+
+````ruby
+irb(main):001:0> require 'wikipedia'
+irb(main):002:0> apple = Wikipedia::article 'apple'
+irb(main):003:0> apple.ambiguous?
+=> true
+irb(main):004:0>
+````
+
 ## TODO
 
 * Integrate it with the [Opensearch API] (http://www.mediawiki.org/wiki/API%3aOpensearch).
