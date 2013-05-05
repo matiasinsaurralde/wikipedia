@@ -36,12 +36,12 @@ irb(main):001:0> require 'wikipedia'
 irb(main):002:0> apple = Wikipedia::article 'apple'
 irb(main):003:0> apple.ambiguous?
 => true
-irb(main):004:0>
 ````
 
 ## TODO
 
 * Integrate it with the [Opensearch API] (http://www.mediawiki.org/wiki/API%3aOpensearch).
+* Provide a method for classifying text based on context (using data from Wikipedia's disambiguation pages).
 * Switch to Nokogiri or provide support for both Nokogiri and Hpricot?
 
 ## Disclaimer
