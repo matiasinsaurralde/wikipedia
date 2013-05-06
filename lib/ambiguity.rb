@@ -47,7 +47,8 @@ module Wikipedia
 			puts "*** #{section}"
 			articles.each do |article_name, data|
 				puts "#{article_name}: \"#{data[:phrase]}\""
-				Wikipedia::article(article_name.dup)
+				a = Wikipedia::article(article_name.dup)
+				puts a.texts
 				puts
 			end
 			puts
