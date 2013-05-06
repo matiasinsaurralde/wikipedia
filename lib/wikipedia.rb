@@ -23,11 +23,18 @@ module Wikipedia
 		end
 
 		def self.from_api_response(data)
+
 			self.new( data[:name], data )
+
 		end
 
 		def ambiguous?
 			@data[ :raw_html ].include?('(disambiguation)')
+		end
+
+		def disambiguate( given_text )
+			
+			Wikipedia::disambiguate( given_text, self )
 		end
 
 		def inspect()
@@ -37,7 +44,9 @@ module Wikipedia
 		end
 
 		def method_missing(m, *args, &block)
+
 			@data[ m ]
+
 		end
 
 	end
@@ -57,4 +66,7 @@ module Wikipedia
 end
 
 require_relative 'api'
+
+require_relative 'ambiguity'
+
 require_relative 'opensearch'
