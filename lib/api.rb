@@ -1,13 +1,5 @@
 # encoding: utf-8
 
-=begin
-require 'hpricot'
-require 'rexml/document'
-require 'htmlentities'
-require 'open-uri'
-require 'pp'
-=end
-
 class String
 
 	def capitalize_every_word()
@@ -71,7 +63,13 @@ module Wikipedia
 
 					data.merge!( { :raw_html => raw_html, :raw_xml => c } )
 
-					Hpricot( raw_html ).search('p').each do |ph|
+					if defined?(Hpricot)
+						paragraphs = Hpricot( raw_html ).search('p')
+					else
+						paragraphs = Nokogiri::HTML( raw_html ).css('p')
+					end
+
+					paragraphs.each do |ph|
 						texts << escape( ph.inner_text )
 					end
 
