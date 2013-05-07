@@ -40,3 +40,19 @@ module Math
 	end
 
 end
+
+class Hash
+
+def percentages!(total, round = 1); self.each {|k,v| self[k] = (v.to_f / total.to_f * 100.0).round( round ) }; end; def most_frequent; return self.sort_by {|k,v| v }.reverse.to_h; end; def less_frequent; return self.sort_by{|k,v| v}.to_h; end; def less_frequent!; self.replace(self.less_frequent); end
+
+def magnitude()
+	Math::magnitude(self)
+end
+
+def dot_product( v2 )
+	Math::dotp( self, v2 )
+end
+
+end
+
+class Array; def to_h; _ = {}; self.each do |n|; _.store( n[0], n[1] ); end; return _; end; end
