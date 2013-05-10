@@ -108,3 +108,13 @@ corpus = Corpus.new(	:company => File.read('company.txt'),
 			:fruit => File.read('fruit.txt') )
 
 corpus.classify('NEW DELHI: After launching a smaller, cheaper version of the popular iPad last year, Apple is looking to up the ante in smartphones too. The world\'s biggest technology company will launch the much-speculated cheaper iPhone this year, according to a report by ETrade Supply. As per a source of ETrade Supply in Foxconn, which manufacturer iPhones, Apple is gearing up to launch a budget smartphone. Last year, ETrade Supply sources had leaked accurate information about upcoming Apple products, including the front panel of iPhone 5.' )
+
+
+## $ ruby corpus.rb
+## "company: 71.46%, dotp: 3.9400000000000004, magnitude_p: 5.513429060031517"
+## {"after"=>0.3, "company"=>0.5, "information"=>0.1, "ipad"=>0.1, "iphone"=>0.2, "launch"=>0.1, "per"=>0.1, "products"=>0.4, "smartphone"=>0.1, "technology"=>0.1, "too"=>0.1, "up"=>0.1, "will"=>0.0, "world s"=>0.1, "year"=>0.2}
+
+## "fruit: 17.82%, dotp: 0.24, magnitude_p: 1.3471451295239132"
+## {"after"=>0.0, "company"=>0.0, "information"=>0.0, "ipad"=>0.0, "iphone"=>0.0, "launch"=>0.0, "per"=>0.0, "products"=>0.0, "smartphone"=>0.0, "technology"=>0.0, "too"=>0.0, "up"=>0.0, "will"=>0.2, "world s"=>0.0, "year"=>0.0}
+
+
