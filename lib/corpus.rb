@@ -2,129 +2,109 @@ require 'pp'
 
 require './math'
 
-class Hash
-	def common_with( tokens )
+class String
+	def tokenize()
+		tokens = {}
 
-		tokens.each do |token, weight|
-			if !self[token]
-				self[token] = 0.0
-			end
+		self.downcase!
+
+		splits = self.split(' ')
+
+		splits.each do |s|
+			['.', ',', ':', '!', '?', '(', ')', '-', '\'', '"', '[', ']'].each { |char| s.gsub!(char, ' ') }
+			s.strip!
 		end
 
-		self.each do |token, weight|
-			if !tokens[token]
-				self.delete(token)
+		splits.each do |s|
+			if !tokens[s]
+				tokens.store( s, 0 )
 			end
+			tokens[s] += 1
 		end
 
-		self
+		return tokens.percentages!( splits.size )
 	end
 end
 
 class Corpus
+	def initialize( texts )
 
-	attr_accessor :texts
-	attr_reader :tokens
+		@texts, @idf = {}, {}
 
-	def initialize()
-		@texts, @tokens = [], {}
+		texts.each do |label, text|
+			@texts.store(label, text.tokenize)
+		end
+
+		compute_idf()
+
 	end
 
-	def compute_document_freq()
-		@texts.each do |text|
-			text.tokens.each do |token|
-				if !@tokens[token]
-					@tokens.store( token, 0 )
+	def compute_idf()
+		@texts.each do |label, tokens|
+			tokens.each do |token, weight|
+				if !@idf[token]
+					@idf.store( token, 0 )
 				end
-				@tokens[token] += 1
+				@idf[token]+=1
 			end
 		end
-		@tokens.less_frequent!.percentages!( @texts.size )
+
+		@idf.less_frequent!
+
 	end
 
-	def classify(input)
+	def classify(given_text, threshold = 1)
+		given_text_tokens = {}
 
-		given_text = Text.new( input )
+		given_text.tokenize().each do |token, weight|
+			if @idf[token]
+				if @idf[token] <= threshold
+					given_text_tokens.store( token, weight )
+				end
+			end
+		end
 
-		@texts.each do |text|
+		@texts.each do |label, tokens|
+			tokens.each do |token, weight|
+				if @idf[token]
+					if @idf[token] > threshold
+						tokens.delete(token)
+					end
+				end
+				if !given_text_tokens[token]
+					tokens.delete(token)
+				end
+			end
 
-			puts text.name
+			given_text_tokens.each do |token, weight|
+				if !tokens[token]
+					tokens.store(token, 0.0)
+				end
+			end
 
-			common_tokens = text.tokens.common_with( given_text.tokens )
-
-			dot_product = common_tokens.dot_product( given_text.tokens )
-
-			magnitude_product = Math::magnitude_product( common_tokens.magnitude, given_text.tokens.magnitude )
-
-			distance = Math::similarity( dot_product, magnitude_product )
-
-			puts "similarity: #{distance}, dotp: #{dot_product}, magnitude_p: #{magnitude_product}"
-
+			given_text_tokens.sort_please!
+			tokens.sort_please!
 			
+
+			dot_p = tokens.dot_product(given_text_tokens)
+
+			magnitude_p = Math::magnitude_product( tokens.magnitude, given_text_tokens.magnitude )
+
+			result = Math::similarity( dot_p, magnitude_p )
+
+			pp "#{label}: #{result}, dotp: #{dot_p}, magnitude_p: #{magnitude_p}"
+
+			p tokens
+			puts
+
 		end
 
-
-	end
-
-	def <<(text)
-		@texts.push(text)
+		
 	end
 
 end
 
-class String
-	def cleanup!
-		self.downcase!
-		['.', ',', ':', '!', '?', '(', ')', '-', '\'', '"', '[', ']'].each { |char| self.gsub!(char, ' ') }
-		self.strip!
-		return self
-	end
-end
+corpus = Corpus.new(	:company => File.read('company.txt'),
+			:fruit => File.read('fruit.txt') )
 
-class Text
-
-	attr_reader :name
-
-	def initialize( body, name = '' )
-		@body, @name = body.cleanup!, name
-		@tokens = tokenize()
-	end
-
-	def tokenize()
-
-		tokens, splits = {}, @body.split(' ')
-
-		splits.each do |token|
-			token.downcase!
-			if !tokens[ token ]
-				tokens.store( token, 0 )
-			end
-
-			tokens[token] += 1
-		end
-
-		tokens.most_frequent.percentages!( splits.size )
-
-	end
-
-	def tokens( filter = nil )
-		if filter
-		else
-			@tokens
-		end
-	end
-
-	def self.from_plain_text( s, title )
-		return Text.new( s, title )
-	end
-end
-
-corpus = Corpus.new()
-
-Dir['*.txt'].each do |f|
-	corpus << Text.from_plain_text( File.read(f), f.gsub('.txt', '') )
-end
-
-corpus.compute_document_freq()
-
-corpus.classify('NEW DELHI: After launching a smaller, cheaper version of the popular iPad last year, Apple is looking to up the ante in smartphones too. The world\'s biggest technology company will launch the much-speculated cheaper iPhone this year, according to a report by ETrade Supply. As per a source of ETrade Supply in Foxconn, which manufacturer iPhones, Apple is gearing up to launch a budget smartphone. Last year, ETrade Supply sources had leaked accurate information about upcoming Apple products, including the front panel of iPhone 5.')
+corpus.classify('NEW DELHI: After launching a smaller, cheaper version of the popular iPad last year, Apple is looking to up the ante in smartphones too. The world\'s biggest technology company will launch the much-speculated cheaper iPhone this year, according to a report by ETrade Supply. As per a source of ETrade Supply in Foxconn, which manufacturer iPhones, Apple is gearing up to launch a budget smartphone. Last year, ETrade Supply sources had leaked accurate information about upcoming Apple products, including the front panel of iPhone 5.' )
