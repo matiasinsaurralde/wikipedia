@@ -32,7 +32,7 @@ end
 module Wikipedia
 	module API
 		def self.build_url( params )
-			u = "http://#{language().to_s}.wikipedia.org/w/api.php?"
+			u = "https://#{language().to_s}.wikipedia.org/w/api.php?"
 
 			params.each do |p, v|
 				u += "#{p.to_s}=#{v.to_s}"
