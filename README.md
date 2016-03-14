@@ -47,3 +47,7 @@ irb(main):003:0> apple.ambiguous?
 ## Disclaimer
 
 [Hpricot] (https://github.com/whymirror/hpricot) was used as a tribute to [whytheluckystiff] (http://en.wikipedia.org/wiki/Why_the_lucky_stiff).
+
+## License
+
+[MIT](https://github.com/matiasinsaurralde/wikipedia/blob/master/LICENSE)
